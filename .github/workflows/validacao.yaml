@@ -1,0 +1,23 @@
+name: Validação HTML
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Clonar repositório
+        uses: actions/checkout@v4
+
+      - name: 🧹 Verificar se o HTML é válido
+        run: |
+          if grep -q "TODO" index.html; then
+            echo "❌ Corrija os TODOs antes do deploy."
+            exit 1
+          fi
+          echo "✅ HTML verificado com sucesso."
