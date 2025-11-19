@@ -1,0 +1,62 @@
+name: CI - Validação e Deploy HTML
+
+# Dispara o workflow em push para main, pull request ou execução manual
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+  workflow_dispatch:
+
+# Permissões necessárias para deploy no GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Evita múltiplas execuções simultâneas
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  # Job de validação
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clonar repositório
+        uses: actions/checkout@v4
+
+      - name: Validar HTML básico
+        run: |
+          # Procura por TODO no index.html
+          if grep -q "TODO" index.html; then
+            echo "Encontrei um TODO, corrija antes do merge!"
+            exit 1  # encerra o job com erro se encontrar
+          fi
+          echo "Nenhum erro encontrado, código aprovado!"
+
+  # Job de deploy (só roda se validate passar)
+  deploy:
+    runs-on: ubuntu-latest
+    needs: validate  # depende da validação
+    environment:
+      name: github-pages
+
+    steps:
+      - name: Clonar repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Fazer upload dos arquivos
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'                 # envia todos os arquivos do repositório
+          name: my-pages-artifact   # nome do artefato
+
+      - name: Publicar no GitHub Pages
+        uses: actions/deploy-pages@v4
+        with:
+          artifact_name: my-pages-artifact
