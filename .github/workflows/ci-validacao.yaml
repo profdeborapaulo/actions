@@ -16,7 +16,7 @@ jobs:
       - name: Validar HTML básico
         run: |
           if grep -q "TODO" index.html; then
-            echo "❌ Encontrei um TODO, corrija antes do merge!"
+            echo " Encontrei um TODO, corrija antes do merge!"
             exit 1
           fi
           echo " Nenhum erro encontrado, código aprovado!"

@@ -19,16 +19,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📥 Clonar repositório
+      - name: Clonar repositório
         uses: actions/checkout@v4
 
-      - name: ⚙️ Configurar GitHub Pages
+      - name: Configurar GitHub Pages
         uses: actions/configure-pages@v5
 
-      - name: 📦 Fazer upload dos arquivos
+      - name: Fazer upload dos arquivos
         uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
 
-      - name: 🚀 Publicar no GitHub Pages
+      - name: Publicar no GitHub Pages
         uses: actions/deploy-pages@v4
